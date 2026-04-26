@@ -1,0 +1,975 @@
+{
+    "company_name": "Attio",
+    "bracket": {
+        "pessimistic_visibility_increase_pp": 16.99,
+        "optimistic_visibility_increase_pp": 28.32,
+        "pessimistic_total_revenue_lift_eur": 72100.14644571429,
+        "optimistic_total_revenue_lift_eur": 104793.28868571429,
+        "pessimistic_customer_equivalents": 7.21,
+        "optimistic_customer_equivalents": 10.48
+    },
+    "pessimistic": {
+        "total_current_annual_revenue_eur": 128235.34285714284,
+        "total_potential_annual_revenue_eur": 200335.4893028571,
+        "total_revenue_lift_eur": 72100.14644571429,
+        "total_prompts": 50,
+        "untapped_prompt_count": 24,
+        "prompts_using_real_volume": 1,
+        "prompts_using_chat_fallback": 49,
+        "overall_your_visibility": 0.324,
+        "leader_name": "HubSpot",
+        "leader_visibility": 0.7754,
+        "visibility_gap_pp": 45.14,
+        "top3_lift_share_pct": 16.8,
+        "customer_equivalents": 7.21,
+        "competitive_landscape": [
+            {
+                "competitor_name": "HubSpot",
+                "prompts_won_against_you": 39,
+                "competitor_avg_visibility": 0.7754,
+                "your_avg_visibility": 0.324
+            },
+            {
+                "competitor_name": "Salesforce",
+                "prompts_won_against_you": 38,
+                "competitor_avg_visibility": 0.7408,
+                "your_avg_visibility": 0.324
+            },
+            {
+                "competitor_name": "Pipedrive",
+                "prompts_won_against_you": 27,
+                "competitor_avg_visibility": 0.3726,
+                "your_avg_visibility": 0.324
+            },
+            {
+                "competitor_name": "Zoho",
+                "prompts_won_against_you": 24,
+                "competitor_avg_visibility": 0.3598,
+                "your_avg_visibility": 0.324
+            }
+        ],
+        "market_estimate": {
+            "ai_query_share": 0.1,
+            "peec_to_global_multiplier": 10,
+            "sources": [
+                "https://digitaloft.co.uk/ai-in-seo-statistics/",
+                "https://www.reddit.com/r/digital_marketing/comments/1rjvg0p/chatgpt_traffic_is_converting_31_better_than/",
+                "https://almcorp.com/blog/chatgpt-vs-organic-search-conversion-rate/",
+                "https://capitaloneshopping.com/research/ai-shopping-statistics/",
+                "https://ttms.com/llm-powered-search-vs-traditional-search-2025-2030-forecast/",
+                "https://www.orbitmedia.com/blog/ai-vs-google/"
+            ],
+            "rationale": "ai_query_share=0.1 researched via Tavily. peec_to_global_multiplier=10.0 is a documented assumption (Peec samples ~10% of relevant AI conversations) used only when a prompt has no search_volume."
+        },
+        "action_rate_estimate": {
+            "base_rate": 0.12,
+            "sources": [
+                "https://digitaloft.co.uk/ai-in-seo-statistics/",
+                "https://www.reddit.com/r/digital_marketing/comments/1rjvg0p/chatgpt_traffic_is_converting_31_better_than/",
+                "https://almcorp.com/blog/chatgpt-vs-organic-search-conversion-rate/",
+                "https://capitaloneshopping.com/research/ai-shopping-statistics/",
+                "https://ttms.com/llm-powered-search-vs-traditional-search-2025-2030-forecast/",
+                "https://www.orbitmedia.com/blog/ai-vs-google/"
+            ],
+            "rationale": ""
+        },
+        "visit_to_lead_rate": 0.03,
+        "lead_to_customer_rate": 0.15,
+        "prompt_revenues": [
+            {
+                "prompt_id": "pr_e494f82a-2530-4cdb-b9cb-ff11bb20c33f",
+                "prompt_message": "Compare AI-native CRM platforms for deal health tracking",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.8,
+                "your_position": 4,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 1056,
+                "current_annual_revenue_eur": 4561.92,
+                "target_visibility": 0.9699,
+                "target_position": 2,
+                "target_annual_revenue_eur": 8987.48136,
+                "revenue_lift_eur": 4425.56136
+            },
+            {
+                "prompt_id": "pr_cd03ebde-55ed-4ec5-bf2b-308ffe56c058",
+                "prompt_message": "Top-rated CRM automation platforms for high-growth startups",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.7142857142857143,
+                "your_position": 4,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 942.8571428571429,
+                "current_annual_revenue_eur": 4073.142857142857,
+                "target_visibility": 0.8841857142857144,
+                "target_position": 2,
+                "target_annual_revenue_eur": 8193.218502857142,
+                "revenue_lift_eur": 4120.075645714285
+            },
+            {
+                "prompt_id": "pr_535d3e07-eb82-44cf-9568-681a0226c0e9",
+                "prompt_message": "Attio for RevOps: Is it better than legacy CRM options?",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 1,
+                "your_position": 3.1666666666666665,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 1320,
+                "current_annual_revenue_eur": 7128,
+                "target_visibility": 1,
+                "target_position": 1.1666666666666665,
+                "target_annual_revenue_eur": 10692,
+                "revenue_lift_eur": 3564
+            },
+            {
+                "prompt_id": "pr_0dcf8ff5-3a17-48ea-9297-4e0c979593f9",
+                "prompt_message": "Which CRM provides the best real-time data streaming for GTM teams?",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.6,
+                "your_position": 5,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 792,
+                "current_annual_revenue_eur": 2566.0799999999995,
+                "target_visibility": 0.7699,
+                "target_position": 3,
+                "target_annual_revenue_eur": 5487.847199999999,
+                "revenue_lift_eur": 2921.7672
+            },
+            {
+                "prompt_id": "pr_b941b2b8-65d6-4f2a-8898-040ab39e3e25",
+                "prompt_message": "Best CRM for scaling a product-led sales motion quickly",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.6666666666666666,
+                "your_position": 1.5,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 880,
+                "current_annual_revenue_eur": 6177.599999999999,
+                "target_visibility": 0.8365666666666667,
+                "target_position": 1,
+                "target_annual_revenue_eur": 8944.5708,
+                "revenue_lift_eur": 2766.9708
+            },
+            {
+                "prompt_id": "pr_dc713738-efac-4357-a76a-aabf4e7b9f3a",
+                "prompt_message": "Compare CRM options for tracking product-led growth metrics",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.5,
+                "your_position": 2.3333333333333335,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 660,
+                "current_annual_revenue_eur": 4633.199999999999,
+                "target_visibility": 0.6698999999999999,
+                "target_position": 1,
+                "target_annual_revenue_eur": 7162.570799999998,
+                "revenue_lift_eur": 2529.370799999999
+            },
+            {
+                "prompt_id": "pr_19c5feda-47ae-434c-9515-2f286143adce",
+                "prompt_message": "Best CRM platforms for product-led growth teams tracking user adoption",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.2,
+                "your_position": 2,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 288,
+                "current_annual_revenue_eur": 2021.76,
+                "target_visibility": 0.3699,
+                "target_position": 1,
+                "target_annual_revenue_eur": 4314.5136,
+                "revenue_lift_eur": 2292.7536
+            },
+            {
+                "prompt_id": "pr_e1978d1d-9274-4e5d-8b8f-bb7e88eb29a4",
+                "prompt_message": "Which CRM uses AI best to clean and enrich contact data automatically?",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.25,
+                "your_position": 2,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Salesforce",
+                "annual_mentions": 330,
+                "current_annual_revenue_eur": 2316.5999999999995,
+                "target_visibility": 0.4199,
+                "target_position": 1,
+                "target_annual_revenue_eur": 4489.570799999999,
+                "revenue_lift_eur": 2172.970799999999
+            },
+            {
+                "prompt_id": "pr_c59d05f2-0311-408f-aca1-c680c24ec9dc",
+                "prompt_message": "Best CRM platforms with developer-friendly APIs for custom data integration",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.25,
+                "your_position": 5,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 360,
+                "current_annual_revenue_eur": 1166.3999999999999,
+                "target_visibility": 0.4199,
+                "target_position": 3,
+                "target_annual_revenue_eur": 3265.1423999999997,
+                "revenue_lift_eur": 2098.7424
+            },
+            {
+                "prompt_id": "pr_f7c957a3-fc90-4344-a8ab-8e1a6b3acd65",
+                "prompt_message": "Easiest CRM for PLG teams to manage high-volume lead pipelines",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.2,
+                "your_position": 1,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 264,
+                "current_annual_revenue_eur": 2138.3999999999996,
+                "target_visibility": 0.3699,
+                "target_position": 1,
+                "target_annual_revenue_eur": 3954.9707999999996,
+                "revenue_lift_eur": 1816.5708
+            }
+        ],
+        "top_actions": [
+            {
+                "prompt_id": "pr_e494f82a-2530-4cdb-b9cb-ff11bb20c33f",
+                "prompt_message": "Compare AI-native CRM platforms for deal health tracking",
+                "revenue_lift_eur": 4425.56136,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_cd03ebde-55ed-4ec5-bf2b-308ffe56c058",
+                "prompt_message": "Top-rated CRM automation platforms for high-growth startups",
+                "revenue_lift_eur": 4120.075645714285,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_535d3e07-eb82-44cf-9568-681a0226c0e9",
+                "prompt_message": "Attio for RevOps: Is it better than legacy CRM options?",
+                "revenue_lift_eur": 3564,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_0dcf8ff5-3a17-48ea-9297-4e0c979593f9",
+                "prompt_message": "Which CRM provides the best real-time data streaming for GTM teams?",
+                "revenue_lift_eur": 2921.7672,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_b941b2b8-65d6-4f2a-8898-040ab39e3e25",
+                "prompt_message": "Best CRM for scaling a product-led sales motion quickly",
+                "revenue_lift_eur": 2766.9708,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_dc713738-efac-4357-a76a-aabf4e7b9f3a",
+                "prompt_message": "Compare CRM options for tracking product-led growth metrics",
+                "revenue_lift_eur": 2529.370799999999,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_19c5feda-47ae-434c-9515-2f286143adce",
+                "prompt_message": "Best CRM platforms for product-led growth teams tracking user adoption",
+                "revenue_lift_eur": 2292.7536,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_e1978d1d-9274-4e5d-8b8f-bb7e88eb29a4",
+                "prompt_message": "Which CRM uses AI best to clean and enrich contact data automatically?",
+                "revenue_lift_eur": 2172.970799999999,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_c59d05f2-0311-408f-aca1-c680c24ec9dc",
+                "prompt_message": "Best CRM platforms with developer-friendly APIs for custom data integration",
+                "revenue_lift_eur": 2098.7424,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_f7c957a3-fc90-4344-a8ab-8e1a6b3acd65",
+                "prompt_message": "Easiest CRM for PLG teams to manage high-volume lead pipelines",
+                "revenue_lift_eur": 1816.5708,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            }
+        ],
+        "executive_summary": "Attio is currently missing out on €72,100 in annual revenue, equivalent to 7.21 customers, due to an AI-search visibility gap of 45.14 percentage points behind HubSpot.  Focusing on the top 3 prompts, which capture 16.8% of the total potential lift, will be key to closing this gap."
+    },
+    "optimistic": {
+        "total_current_annual_revenue_eur": 128235.34285714284,
+        "total_potential_annual_revenue_eur": 233028.63154285713,
+        "total_revenue_lift_eur": 104793.28868571429,
+        "total_prompts": 50,
+        "untapped_prompt_count": 24,
+        "prompts_using_real_volume": 1,
+        "prompts_using_chat_fallback": 49,
+        "overall_your_visibility": 0.324,
+        "leader_name": "HubSpot",
+        "leader_visibility": 0.7754,
+        "visibility_gap_pp": 45.14,
+        "top3_lift_share_pct": 13.2,
+        "customer_equivalents": 10.48,
+        "competitive_landscape": [
+            {
+                "competitor_name": "HubSpot",
+                "prompts_won_against_you": 39,
+                "competitor_avg_visibility": 0.7754,
+                "your_avg_visibility": 0.324
+            },
+            {
+                "competitor_name": "Salesforce",
+                "prompts_won_against_you": 38,
+                "competitor_avg_visibility": 0.7408,
+                "your_avg_visibility": 0.324
+            },
+            {
+                "competitor_name": "Pipedrive",
+                "prompts_won_against_you": 27,
+                "competitor_avg_visibility": 0.3726,
+                "your_avg_visibility": 0.324
+            },
+            {
+                "competitor_name": "Zoho",
+                "prompts_won_against_you": 24,
+                "competitor_avg_visibility": 0.3598,
+                "your_avg_visibility": 0.324
+            }
+        ],
+        "market_estimate": {
+            "ai_query_share": 0.1,
+            "peec_to_global_multiplier": 10,
+            "sources": [
+                "https://digitaloft.co.uk/ai-in-seo-statistics/",
+                "https://www.reddit.com/r/digital_marketing/comments/1rjvg0p/chatgpt_traffic_is_converting_31_better_than/",
+                "https://almcorp.com/blog/chatgpt-vs-organic-search-conversion-rate/",
+                "https://capitaloneshopping.com/research/ai-shopping-statistics/",
+                "https://ttms.com/llm-powered-search-vs-traditional-search-2025-2030-forecast/",
+                "https://www.orbitmedia.com/blog/ai-vs-google/"
+            ],
+            "rationale": "ai_query_share=0.1 researched via Tavily. peec_to_global_multiplier=10.0 is a documented assumption (Peec samples ~10% of relevant AI conversations) used only when a prompt has no search_volume."
+        },
+        "action_rate_estimate": {
+            "base_rate": 0.12,
+            "sources": [
+                "https://digitaloft.co.uk/ai-in-seo-statistics/",
+                "https://www.reddit.com/r/digital_marketing/comments/1rjvg0p/chatgpt_traffic_is_converting_31_better_than/",
+                "https://almcorp.com/blog/chatgpt-vs-organic-search-conversion-rate/",
+                "https://capitaloneshopping.com/research/ai-shopping-statistics/",
+                "https://ttms.com/llm-powered-search-vs-traditional-search-2025-2030-forecast/",
+                "https://www.orbitmedia.com/blog/ai-vs-google/"
+            ],
+            "rationale": ""
+        },
+        "visit_to_lead_rate": 0.03,
+        "lead_to_customer_rate": 0.15,
+        "prompt_revenues": [
+            {
+                "prompt_id": "pr_cd03ebde-55ed-4ec5-bf2b-308ffe56c058",
+                "prompt_message": "Top-rated CRM automation platforms for high-growth startups",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.7142857142857143,
+                "your_position": 4,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 942.8571428571429,
+                "current_annual_revenue_eur": 4073.142857142857,
+                "target_visibility": 0.9974857142857143,
+                "target_position": 2,
+                "target_annual_revenue_eur": 9243.101622857143,
+                "revenue_lift_eur": 5169.958765714286
+            },
+            {
+                "prompt_id": "pr_e494f82a-2530-4cdb-b9cb-ff11bb20c33f",
+                "prompt_message": "Compare AI-native CRM platforms for deal health tracking",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.8,
+                "your_position": 4,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 1056,
+                "current_annual_revenue_eur": 4561.92,
+                "target_visibility": 1,
+                "target_position": 2,
+                "target_annual_revenue_eur": 9266.4,
+                "revenue_lift_eur": 4704.48
+            },
+            {
+                "prompt_id": "pr_b941b2b8-65d6-4f2a-8898-040ab39e3e25",
+                "prompt_message": "Best CRM for scaling a product-led sales motion quickly",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.6666666666666666,
+                "your_position": 1.5,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 880,
+                "current_annual_revenue_eur": 6177.599999999999,
+                "target_visibility": 0.9498666666666666,
+                "target_position": 1,
+                "target_annual_revenue_eur": 10155.9744,
+                "revenue_lift_eur": 3978.3743999999997
+            },
+            {
+                "prompt_id": "pr_dc713738-efac-4357-a76a-aabf4e7b9f3a",
+                "prompt_message": "Compare CRM options for tracking product-led growth metrics",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.5,
+                "your_position": 2.3333333333333335,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 660,
+                "current_annual_revenue_eur": 4633.199999999999,
+                "target_visibility": 0.7832,
+                "target_position": 1,
+                "target_annual_revenue_eur": 8373.9744,
+                "revenue_lift_eur": 3740.7744000000002
+            },
+            {
+                "prompt_id": "pr_0dcf8ff5-3a17-48ea-9297-4e0c979593f9",
+                "prompt_message": "Which CRM provides the best real-time data streaming for GTM teams?",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.6,
+                "your_position": 5,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 792,
+                "current_annual_revenue_eur": 2566.0799999999995,
+                "target_visibility": 0.8832,
+                "target_position": 3,
+                "target_annual_revenue_eur": 6295.449599999999,
+                "revenue_lift_eur": 3729.3695999999995
+            },
+            {
+                "prompt_id": "pr_19c5feda-47ae-434c-9515-2f286143adce",
+                "prompt_message": "Best CRM platforms for product-led growth teams tracking user adoption",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.2,
+                "your_position": 2,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 288,
+                "current_annual_revenue_eur": 2021.76,
+                "target_visibility": 0.4832,
+                "target_position": 1,
+                "target_annual_revenue_eur": 5636.0448,
+                "revenue_lift_eur": 3614.2847999999994
+            },
+            {
+                "prompt_id": "pr_535d3e07-eb82-44cf-9568-681a0226c0e9",
+                "prompt_message": "Attio for RevOps: Is it better than legacy CRM options?",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 1,
+                "your_position": 3.1666666666666665,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "HubSpot",
+                "annual_mentions": 1320,
+                "current_annual_revenue_eur": 7128,
+                "target_visibility": 1,
+                "target_position": 1.1666666666666665,
+                "target_annual_revenue_eur": 10692,
+                "revenue_lift_eur": 3564
+            },
+            {
+                "prompt_id": "pr_e1978d1d-9274-4e5d-8b8f-bb7e88eb29a4",
+                "prompt_message": "Which CRM uses AI best to clean and enrich contact data automatically?",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.25,
+                "your_position": 2,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Salesforce",
+                "annual_mentions": 330,
+                "current_annual_revenue_eur": 2316.5999999999995,
+                "target_visibility": 0.5332,
+                "target_position": 1,
+                "target_annual_revenue_eur": 5700.974399999998,
+                "revenue_lift_eur": 3384.374399999999
+            },
+            {
+                "prompt_id": "pr_f7c957a3-fc90-4344-a8ab-8e1a6b3acd65",
+                "prompt_message": "Easiest CRM for PLG teams to manage high-volume lead pipelines",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.2,
+                "your_position": 1,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 264,
+                "current_annual_revenue_eur": 2138.3999999999996,
+                "target_visibility": 0.4832,
+                "target_position": 1,
+                "target_annual_revenue_eur": 5166.3744,
+                "revenue_lift_eur": 3027.9744
+            },
+            {
+                "prompt_id": "pr_c59d05f2-0311-408f-aca1-c680c24ec9dc",
+                "prompt_message": "Best CRM platforms with developer-friendly APIs for custom data integration",
+                "volume_source": "chat_fallback",
+                "search_volume": 0,
+                "volume_source_urls": [],
+                "your_visibility": 0.25,
+                "your_position": 5,
+                "top_competitor_visibility": 1,
+                "top_competitor_name": "Pipedrive",
+                "annual_mentions": 360,
+                "current_annual_revenue_eur": 1166.3999999999999,
+                "target_visibility": 0.5332,
+                "target_position": 3,
+                "target_annual_revenue_eur": 4146.1632,
+                "revenue_lift_eur": 2979.7632000000003
+            }
+        ],
+        "top_actions": [
+            {
+                "prompt_id": "pr_cd03ebde-55ed-4ec5-bf2b-308ffe56c058",
+                "prompt_message": "Top-rated CRM automation platforms for high-growth startups",
+                "revenue_lift_eur": 5169.958765714286,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_e494f82a-2530-4cdb-b9cb-ff11bb20c33f",
+                "prompt_message": "Compare AI-native CRM platforms for deal health tracking",
+                "revenue_lift_eur": 4704.48,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_b941b2b8-65d6-4f2a-8898-040ab39e3e25",
+                "prompt_message": "Best CRM for scaling a product-led sales motion quickly",
+                "revenue_lift_eur": 3978.3743999999997,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_dc713738-efac-4357-a76a-aabf4e7b9f3a",
+                "prompt_message": "Compare CRM options for tracking product-led growth metrics",
+                "revenue_lift_eur": 3740.7744000000002,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_0dcf8ff5-3a17-48ea-9297-4e0c979593f9",
+                "prompt_message": "Which CRM provides the best real-time data streaming for GTM teams?",
+                "revenue_lift_eur": 3729.3695999999995,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_19c5feda-47ae-434c-9515-2f286143adce",
+                "prompt_message": "Best CRM platforms for product-led growth teams tracking user adoption",
+                "revenue_lift_eur": 3614.2847999999994,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_535d3e07-eb82-44cf-9568-681a0226c0e9",
+                "prompt_message": "Attio for RevOps: Is it better than legacy CRM options?",
+                "revenue_lift_eur": 3564,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_e1978d1d-9274-4e5d-8b8f-bb7e88eb29a4",
+                "prompt_message": "Which CRM uses AI best to clean and enrich contact data automatically?",
+                "revenue_lift_eur": 3384.374399999999,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_f7c957a3-fc90-4344-a8ab-8e1a6b3acd65",
+                "prompt_message": "Easiest CRM for PLG teams to manage high-volume lead pipelines",
+                "revenue_lift_eur": 3027.9744,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            },
+            {
+                "prompt_id": "pr_c59d05f2-0311-408f-aca1-c680c24ec9dc",
+                "prompt_message": "Best CRM platforms with developer-friendly APIs for custom data integration",
+                "revenue_lift_eur": 2979.7632000000003,
+                "action_type": "ugc_engagement",
+                "rationale": "",
+                "evidence_signals": [
+                    "No strong editorial or URL signal found — community presence recommended"
+                ],
+                "suggested_targets": [
+                    "Reddit communities relevant to this prompt topic"
+                ]
+            }
+        ],
+        "executive_summary": "Attio stands to gain €104,793 in annual revenue, equivalent to 10.48 customers, by closing the 45.14 percentage point visibility gap with HubSpot. Currently, HubSpot leads with 77.5% visibility compared to Attio's 32.4%. Focusing on the top 3 AI search prompts can unlock 13.2% of this total revenue lift."
+    },
+    "prep": {
+        "company": {
+            "name": "Attio",
+            "project_id": "or_47ccb54e-0f32-4c95-b460-6a070499d084",
+            "brand_id": "kw_aa69e6a9-2d6b-40be-84a7-77b8bb3a04aa"
+        },
+        "window": {
+            "start_date": "2026-01-25",
+            "end_date": "2026-04-25",
+            "days": 90
+        },
+        "baseline": {
+            "total_chats": 392,
+            "chats_mentioning_brand": 228,
+            "visibility_score": 58.16
+        },
+        "paid_media_opportunities": [
+            {
+                "domain": "prospeo.io",
+                "classification": "DIRECT_PAID",
+                "classification_confidence": 0.75,
+                "pricing": {
+                    "low_usd": null,
+                    "high_usd": null,
+                    "source": "ESTIMATE",
+                    "notes": "pricing unavailable; RFQ required"
+                },
+                "gap_urls": [
+                    {
+                        "url": "https://prospeo.io/s/crm-for-revops",
+                        "retrieval_count": 1,
+                        "citation_count": 4,
+                        "competitors_present": [
+                            {
+                                "brand_id": "kw_2cb435a5-37da-4b01-9767-f7e878f7ecc2",
+                                "brand_name": "HubSpot",
+                                "mention_chats": 19
+                            },
+                            {
+                                "brand_id": "kw_0f576912-e163-4829-a15e-a70238d5fec7",
+                                "brand_name": "Pipedrive",
+                                "mention_chats": 19
+                            },
+                            {
+                                "brand_id": "kw_5604d168-9e16-4b79-aeec-2628322bb240",
+                                "brand_name": "Salesforce",
+                                "mention_chats": 19
+                            }
+                        ],
+                        "contributing_chats": 8
+                    },
+                    {
+                        "url": "https://prospeo.io/s/automated-lead-routing",
+                        "retrieval_count": 1,
+                        "citation_count": 3,
+                        "competitors_present": [
+                            {
+                                "brand_id": "kw_2cb435a5-37da-4b01-9767-f7e878f7ecc2",
+                                "brand_name": "HubSpot",
+                                "mention_chats": 4
+                            },
+                            {
+                                "brand_id": "kw_5604d168-9e16-4b79-aeec-2628322bb240",
+                                "brand_name": "Salesforce",
+                                "mention_chats": 4
+                            }
+                        ],
+                        "contributing_chats": 4
+                    }
+                ],
+                "contributing_chat_count": 14,
+                "delta_chats_pessimistic": 8.4,
+                "delta_chats_optimistic": 14,
+                "delta_visibility_pp_pessimistic": 2.14,
+                "delta_visibility_pp_optimistic": 3.57
+            },
+            {
+                "domain": "simular.ai",
+                "classification": "DIRECT_PAID",
+                "classification_confidence": 0.75,
+                "pricing": {
+                    "low_usd": 100,
+                    "high_usd": 100,
+                    "source": "https://www.simular.ai/simular",
+                    "notes": "Simular AI offers tiered pricing plans starting from free to $100 per pro referral signup, with dedicated support and advanced features for businesses. Simular Pro targets professionals managing multiple workflows. Simular Enterprise provides scalable, secure automation solutions."
+                },
+                "gap_urls": [
+                    {
+                        "url": "https://simular.ai/alternatives/ai-sales-tools",
+                        "retrieval_count": 1,
+                        "citation_count": 5,
+                        "competitors_present": [
+                            {
+                                "brand_id": "kw_2cb435a5-37da-4b01-9767-f7e878f7ecc2",
+                                "brand_name": "HubSpot",
+                                "mention_chats": 16
+                            },
+                            {
+                                "brand_id": "kw_0f576912-e163-4829-a15e-a70238d5fec7",
+                                "brand_name": "Pipedrive",
+                                "mention_chats": 16
+                            },
+                            {
+                                "brand_id": "kw_5604d168-9e16-4b79-aeec-2628322bb240",
+                                "brand_name": "Salesforce",
+                                "mention_chats": 16
+                            }
+                        ],
+                        "contributing_chats": 9
+                    },
+                    {
+                        "url": "https://simular.ai/alternatives/crm-automation-tools",
+                        "retrieval_count": 1,
+                        "citation_count": 1,
+                        "competitors_present": [
+                            {
+                                "brand_id": "kw_f8720a05-a06d-4702-8fde-d73d071696de",
+                                "brand_name": "Zoho",
+                                "mention_chats": 11
+                            },
+                            {
+                                "brand_id": "kw_2cb435a5-37da-4b01-9767-f7e878f7ecc2",
+                                "brand_name": "HubSpot",
+                                "mention_chats": 11
+                            },
+                            {
+                                "brand_id": "kw_0f576912-e163-4829-a15e-a70238d5fec7",
+                                "brand_name": "Pipedrive",
+                                "mention_chats": 11
+                            },
+                            {
+                                "brand_id": "kw_5604d168-9e16-4b79-aeec-2628322bb240",
+                                "brand_name": "Salesforce",
+                                "mention_chats": 11
+                            }
+                        ],
+                        "contributing_chats": 3
+                    }
+                ],
+                "contributing_chat_count": 12,
+                "delta_chats_pessimistic": 7.2,
+                "delta_chats_optimistic": 12,
+                "delta_visibility_pp_pessimistic": 1.84,
+                "delta_visibility_pp_optimistic": 3.06
+            },
+            {
+                "domain": "guideflow.com",
+                "classification": "DIRECT_PAID",
+                "classification_confidence": 0.75,
+                "pricing": {
+                    "low_usd": 1499,
+                    "high_usd": 3600,
+                    "source": "https://www.guideflow.com/partners",
+                    "notes": "Guideflow offers a partner program with recurring commissions for referrals, and its CRM software centralizes customer data and automates workflows. Pricing for Guideflow plans starts at $1,499 per month. Guideflow's partner program pays 20% lifetime commission on referred customers."
+                },
+                "gap_urls": [
+                    {
+                        "url": "https://guideflow.com/blog/best-revenue-operations-software",
+                        "retrieval_count": 1,
+                        "citation_count": 4,
+                        "competitors_present": [
+                            {
+                                "brand_id": "kw_2cb435a5-37da-4b01-9767-f7e878f7ecc2",
+                                "brand_name": "HubSpot",
+                                "mention_chats": 10
+                            },
+                            {
+                                "brand_id": "kw_5604d168-9e16-4b79-aeec-2628322bb240",
+                                "brand_name": "Salesforce",
+                                "mention_chats": 10
+                            }
+                        ],
+                        "contributing_chats": 6
+                    },
+                    {
+                        "url": "https://guideflow.com/blog/best-ai-sales-tools",
+                        "retrieval_count": 1,
+                        "citation_count": 1,
+                        "competitors_present": [
+                            {
+                                "brand_id": "kw_2cb435a5-37da-4b01-9767-f7e878f7ecc2",
+                                "brand_name": "HubSpot",
+                                "mention_chats": 3
+                            },
+                            {
+                                "brand_id": "kw_5604d168-9e16-4b79-aeec-2628322bb240",
+                                "brand_name": "Salesforce",
+                                "mention_chats": 3
+                            }
+                        ],
+                        "contributing_chats": 3
+                    }
+                ],
+                "contributing_chat_count": 11,
+                "delta_chats_pessimistic": 6.6,
+                "delta_chats_optimistic": 11,
+                "delta_visibility_pp_pessimistic": 1.68,
+                "delta_visibility_pp_optimistic": 2.81
+            }
+        ],
+        "projected": {
+            "pessimistic": {
+                "visibility_score": 75.15,
+                "delta": 16.99
+            },
+            "optimistic": {
+                "visibility_score": 86.48,
+                "delta": 28.32
+            }
+        },
+        "warnings": [
+            "25 of 40 paid domains had low classification confidence (<0.8)",
+            "15 domains had no public pricing (RFQ required)",
+            "1 domains classified as paid but had no gap URLs in window",
+            "1 domains had all URLs below the retrieval floor (<2)",
+            "showing top 3 of 30 paid-media opportunities by optimistic lift"
+        ]
+    }
+}

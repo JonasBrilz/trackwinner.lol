@@ -1,0 +1,43 @@
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  - name: gcr.io/cloud-builders/gsutil
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        gsutil cp gs://bighack-berlin-build-cache/node_modules.tar.gz /workspace/node_modules.tar.gz || true
+        gsutil cp gs://bighack-berlin-build-cache/lock_hash.txt /workspace/lock_hash.txt || true
+
+  - name: node:22-alpine
+    dir: frontend
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        LOCK_HASH=$$(md5sum package-lock.json | cut -d' ' -f1)
+        CACHED_HASH=$$(cat /workspace/lock_hash.txt 2>/dev/null || echo "none")
+        if [ "$$LOCK_HASH" = "$$CACHED_HASH" ] && [ -f /workspace/node_modules.tar.gz ]; then
+          echo "Cache hit — extracting node_modules"
+          tar -xzf /workspace/node_modules.tar.gz
+        else
+          echo "Cache miss — running npm ci"
+          npm ci --quiet
+          tar -czf /workspace/node_modules.tar.gz node_modules
+          echo "$$LOCK_HASH" > /workspace/lock_hash.txt
+          echo "SAVE_CACHE=1" > /workspace/cache_flag
+        fi
+        npm run build
+
+  - name: gcr.io/cloud-builders/gsutil
+    dir: frontend
+    entrypoint: sh
+    args:
+      - -c
+      - |
+        if [ -f /workspace/cache_flag ]; then
+          gsutil cp /workspace/node_modules.tar.gz gs://bighack-berlin-build-cache/node_modules.tar.gz
+          gsutil cp /workspace/lock_hash.txt gs://bighack-berlin-build-cache/lock_hash.txt
+        fi
+        gsutil -m rsync -r -d ./out gs://trackwinner-lol

@@ -1,0 +1,1 @@
+{"attio": {"value_eur": 12000.0, "source": "https://attio.com/templates/revenue-operations/arr-projection", "notes": "Attio's average revenue per customer (ACV) is industry-specific, while ARR measures total recurring revenue. ACV typically grows 15-25% annually. ARR is calculated by multiplying monthly recurring revenue (MRR) by 12.", "date": "2026-04-25"}}
