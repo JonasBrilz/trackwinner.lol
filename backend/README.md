@@ -1,4 +1,5 @@
 # AI Visibility Revenue Impact Calculator
+<!-- monorepo trigger test -->
 
 Most companies don't know how much money they're losing because AI assistants (ChatGPT, Gemini, Perplexity) aren't recommending them. Given a Peec project ID, this tool quantifies that gap in euros, identifies paid-media platforms where competitors appear and you don't, and tells you what to do about it.
 
