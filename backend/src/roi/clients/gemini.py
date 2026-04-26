@@ -1,5 +1,4 @@
 import json
-import asyncio
 from google import genai
 from google.genai import errors as genai_errors
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
@@ -32,8 +31,7 @@ def _is_rate_limit(exc: BaseException) -> bool:
     reraise=True,
 )
 async def _call_gemini(contents: str) -> str:
-    response = await asyncio.to_thread(
-        _client().models.generate_content,
+    response = await _client().aio.models.generate_content(
         model=GEMINI_MODEL,
         contents=contents,
     )
@@ -59,8 +57,7 @@ async def generate_text(prompt: str) -> str:
 async def _call_gemini_no_retry(contents: str) -> str:
     """One-shot Gemini call without tenacity retries. Used for non-critical paths
     where we want to fail fast instead of waiting through a 60s retry chain."""
-    response = await asyncio.to_thread(
-        _client().models.generate_content,
+    response = await _client().aio.models.generate_content(
         model=GEMINI_MODEL,
         contents=contents,
     )
