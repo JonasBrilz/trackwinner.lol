@@ -52,7 +52,7 @@ Pushes that only touch `frontend/` only trigger the frontend build, and vice ver
 
 To pull latest changes from the original repos into the monorepo:
 
-**Frontend** (from `JonasBrilz/BigHack-Berlin-2026`):
+**Frontend** (from [JonasBrilz/BigHack-Berlin-2026](https://github.com/JonasBrilz/BigHack-Berlin-2026)):
 ```bash
 git clone https://github.com/JonasBrilz/BigHack-Berlin-2026 /tmp/bighack
 cp frontend/cloudbuild.yaml /tmp/frontend-cloudbuild.yaml.bak
@@ -61,7 +61,7 @@ cp /tmp/frontend-cloudbuild.yaml.bak frontend/cloudbuild.yaml
 # Ensure next.config.mjs has output: "standalone"
 ```
 
-**Backend** (from `JonasBrilz/hackathon`):
+**Backend** (from [JonasBrilz/hackathon](https://github.com/JonasBrilz/hackathon)):
 ```bash
 git clone https://github.com/JonasBrilz/hackathon /tmp/hackathon
 cp backend/cloudbuild.yaml /tmp/backend-cloudbuild.yaml.bak
