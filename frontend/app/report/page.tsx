@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -23,22 +24,24 @@ import {
   Cpu,
   RotateCcw,
   Plus,
+  AlertTriangle,
   type LucideIcon,
 } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import {
-  BRAND,
+  DEFAULT_PROJECT_ID,
+  FETCH_TIMEOUT_MS,
   allPromptsByLift,
-  bracket,
   competitorsRanked,
-  data,
-  executiveSummary,
+  fetchReport,
   formatEuro,
   formatPct,
   formatUsdRange,
   lowestVisibilityPrompts,
   paidMediaOpportunities,
+  type Bracket,
   type PaidMediaOpportunity,
+  type PeecRoot,
   type PromptDetail,
 } from "@/lib/peec";
 import {
@@ -63,6 +66,14 @@ type Media = {
 
 const CARD_ICONS: LucideIcon[] = [Globe2, Briefcase, Cpu];
 
+function hostnameOf(url: string): string {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 function classificationLabel(c: string): string {
   return c
     .replace(/_/g, " ")
@@ -70,7 +81,11 @@ function classificationLabel(c: string): string {
     .replace(/\b\w/g, (m) => m.toUpperCase());
 }
 
-function buildMedia(o: PaidMediaOpportunity, i: number): Media {
+function buildMedia(
+  o: PaidMediaOpportunity,
+  i: number,
+  bracket: Bracket,
+): Media {
   const confidencePct = Math.round(o.classification_confidence * 100);
   const audience = `${classificationLabel(o.classification)} · ${confidencePct}% confidence · ${o.contributing_chat_count} contributing chats`;
 
@@ -103,36 +118,135 @@ function buildMedia(o: PaidMediaOpportunity, i: number): Media {
   };
 }
 
-const MEDIA: Media[] = paidMediaOpportunities(3).map(buildMedia);
-
 type CardData = { state: CardState };
 type StateMap = Record<string, CardData>;
 
-const initialStateMap = (): StateMap =>
-  MEDIA.reduce<StateMap>((acc, m) => {
+const buildInitialStateMap = (media: Media[]): StateMap =>
+  media.reduce<StateMap>((acc, m) => {
     acc[m.id] = { state: "estimate" };
     return acc;
   }, {});
 
+type FetchState =
+  | { status: "loading" }
+  | { status: "error" }
+  | { status: "ready"; root: PeecRoot };
+
 export default function ReportPage() {
-  const [paidMediaStates, setPaidMediaStates] = useState<StateMap>(initialStateMap);
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <ReportPageInner />
+    </Suspense>
+  );
+}
+
+function ReportPageInner() {
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("project") ?? DEFAULT_PROJECT_ID;
+
+  const [fetchState, setFetchState] = useState<FetchState>({ status: "loading" });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    setFetchState({ status: "loading" });
+
+    fetchReport(projectId, controller.signal)
+      .then((root) => setFetchState({ status: "ready", root }))
+      .catch(() => setFetchState({ status: "error" }))
+      .finally(() => clearTimeout(timeout));
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [projectId]);
+
+  if (fetchState.status === "loading") {
+    return <LoadingScreen />;
+  }
+  if (fetchState.status === "error") {
+    return <ErrorScreen />;
+  }
+  return <ReportView root={fetchState.root} />;
+}
+
+function LoadingScreen() {
+  return (
+    <main className="min-h-screen flex flex-col">
+      <BrandMark className="fixed top-5 left-6 z-50 no-print" />
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 gap-4">
+        <Loader2 className="w-8 h-8 animate-spin text-ink/70" />
+        <div className="text-[20px] font-semibold tracking-tight">Analyzing…</div>
+        <p className="text-muted text-[14px] max-w-md leading-relaxed">
+          Running the full AI-visibility pipeline. This first pass typically takes
+          60–90 seconds.
+        </p>
+      </div>
+    </main>
+  );
+}
+
+function ErrorScreen() {
+  return (
+    <main className="min-h-screen flex flex-col">
+      <BrandMark className="fixed top-5 left-6 z-50 no-print" />
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 gap-4">
+        <div className="w-12 h-12 rounded-xl bg-canvas border border-line flex items-center justify-center">
+          <AlertTriangle className="w-5 h-5 text-ink/70" />
+        </div>
+        <div className="text-[20px] font-semibold tracking-tight">
+          Analysis service unavailable
+        </div>
+        <p className="text-muted text-[14px] max-w-md leading-relaxed">
+          We couldn&rsquo;t reach the analysis backend. Please try again in a moment.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 px-4 h-10 rounded-xl bg-ink text-white text-[14px] font-medium hover:bg-ink/90 transition flex items-center gap-2"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Try again
+        </button>
+      </div>
+    </main>
+  );
+}
+
+function ReportView({ root }: { root: PeecRoot }) {
+  const brand = root.company_name;
+  const bracket = root.bracket;
+  const scenario = root.optimistic;
+  const executiveSummary = root.executive_summary ?? "";
+
+  const media = useMemo(
+    () => paidMediaOpportunities(root, 3).map((o, i) => buildMedia(o, i, bracket)),
+    [root, bracket],
+  );
+
+  const [paidMediaStates, setPaidMediaStates] = useState<StateMap>(() =>
+    buildInitialStateMap(media),
+  );
   const [hydrated, setHydrated] = useState(false);
-  const [username, setUsername] = useState<string>(BRAND);
+  const [username, setUsername] = useState<string>(brand);
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
+      const initial = buildInitialStateMap(media);
       if (raw) {
         const parsed = JSON.parse(raw) as Record<string, CardData>;
-        const merged: StateMap = { ...initialStateMap(), ...parsed };
+        const merged: StateMap = { ...initial, ...parsed };
         // On re-entry: any card the user sent a request for is now treated
         // as answered. Untouched cards keep their estimate state.
-        for (const m of MEDIA) {
+        for (const m of media) {
           if (merged[m.id]?.state === "sending") {
             merged[m.id] = { state: "received" };
           }
         }
         setPaidMediaStates(merged);
+      } else {
+        setPaidMediaStates(initial);
       }
       localStorage.setItem(ANALYSIS_FLAG, "1");
       const stored = sessionStorage.getItem("peec.user");
@@ -141,7 +255,7 @@ export default function ReportPage() {
       /* noop */
     }
     setHydrated(true);
-  }, []);
+  }, [media]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -194,9 +308,9 @@ export default function ReportPage() {
       return { ...s, [id]: { state: "accepted" } };
     });
 
-  const competitors = competitorsRanked();
-  const allPrompts = allPromptsByLift();
-  const weakPrompts = lowestVisibilityPrompts(3);
+  const competitors = competitorsRanked(scenario);
+  const allPrompts = allPromptsByLift(root, scenario);
+  const weakPrompts = lowestVisibilityPrompts(root, 3);
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -218,9 +332,11 @@ export default function ReportPage() {
           pessimisticPp={bracket.pessimistic_visibility_increase_pp}
           optimisticPp={bracket.optimistic_visibility_increase_pp}
           summary={executiveSummary}
+          acvSource={root.acv?.source}
         />
 
         <PaidMedia
+          media={media}
           states={paidMediaStates}
           onSend={handleSend}
           onReset={handleReset}
@@ -228,30 +344,36 @@ export default function ReportPage() {
         />
 
         <VisibilityGap
-          you={data.overall_your_visibility}
-          leader={data.leader_visibility}
-          leaderName={data.leader_name}
-          gapPp={data.visibility_gap_pp}
+          brand={brand}
+          you={scenario.overall_your_visibility}
+          leader={scenario.leader_visibility}
+          leaderName={scenario.leader_name}
+          gapPp={scenario.visibility_gap_pp}
         />
 
         <InvisibleCallout
-          untapped={data.untapped_prompt_count}
-          total={data.total_prompts}
+          brand={brand}
+          untapped={scenario.untapped_prompt_count}
+          total={scenario.total_prompts}
           examples={weakPrompts}
         />
 
-        <Competitive competitors={competitors} totalPrompts={data.total_prompts} />
+        <Competitive
+          brand={brand}
+          competitors={competitors}
+          totalPrompts={scenario.total_prompts}
+        />
 
         <PromptsTable
           prompts={allPrompts}
-          sharePct={data.top3_lift_share_pct}
+          sharePct={scenario.top3_lift_share_pct}
         />
 
         <Methodology
-          aiQueryShare={data.market_estimate.ai_query_share}
-          realVolume={data.prompts_using_real_volume}
-          totalPrompts={data.total_prompts}
-          source={data.market_estimate.sources[0]}
+          aiQueryShare={scenario.market_estimate.ai_query_share}
+          realVolume={scenario.prompts_using_real_volume}
+          totalPrompts={scenario.total_prompts}
+          source={scenario.market_estimate.sources[0]}
         />
 
         <CTA />
@@ -289,6 +411,7 @@ function Hero({
   pessimisticPp,
   optimisticPp,
   summary,
+  acvSource,
 }: {
   pessimisticLift: number;
   optimisticLift: number;
@@ -297,6 +420,7 @@ function Hero({
   pessimisticPp: number;
   optimisticPp: number;
   summary: string;
+  acvSource?: string;
 }) {
   const fmtCust = (n: number) =>
     n.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -316,7 +440,7 @@ function Hero({
         </div>
         <div className="text-[clamp(2.5rem,8.5vw,5.5rem)] font-semibold tracking-[-0.04em] leading-[1.02] text-gain tabular-nums">
           {formatEuro(pessimisticLift)}
-          <span className="text-white/40 font-normal text-[0.55em] mx-4 align-middle">
+          <span className="text-gain font-normal text-[0.55em] mx-4 align-middle">
             –
           </span>
           {formatEuro(optimisticLift)}
@@ -332,6 +456,19 @@ function Hero({
         <div className="mt-2 text-[13px] text-white/50 tabular-nums">
           {pessimisticPp.toFixed(2)}–{optimisticPp.toFixed(2)} pp visibility upside
         </div>
+        {acvSource && (
+          <div className="mt-1 text-[12px] text-white/40">
+            ACV researched from{" "}
+            <a
+              href={acvSource}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-white/20 underline-offset-2 hover:text-white/70"
+            >
+              {hostnameOf(acvSource)}
+            </a>
+          </div>
+        )}
 
         {summary && (
           <div className="mt-10 pt-7 border-t border-white/15 max-w-3xl">
@@ -349,11 +486,13 @@ function Hero({
 }
 
 function VisibilityGap({
+  brand,
   you,
   leader,
   leaderName,
   gapPp,
 }: {
+  brand: string;
   you: number;
   leader: number;
   leaderName: string;
@@ -372,13 +511,13 @@ function VisibilityGap({
             {Math.round(gapPp)} pp visibility gap
           </h2>
           <p className="text-muted text-[14px] mt-1">
-            Share of voice across AI answers — {BRAND} vs. {leaderName}.
+            Share of voice across AI answers — {brand} vs. {leaderName}.
           </p>
         </div>
       </div>
 
       <div className="space-y-5">
-        <Bar label={BRAND} value={you} tone="muted" />
+        <Bar label={brand} value={you} tone="muted" />
         <Bar label={leaderName} value={leader} tone="accent" />
       </div>
     </motion.div>
@@ -418,10 +557,12 @@ function Bar({
 }
 
 function InvisibleCallout({
+  brand,
   untapped,
   total,
   examples,
 }: {
+  brand: string;
   untapped: number;
   total: number;
   examples: { prompt_id: string; prompt_message: string; your_visibility: number }[];
@@ -462,7 +603,7 @@ function InvisibleCallout({
               / {total}
             </span>
             <span className="text-[14px] text-muted ml-2">
-              prompts where {BRAND} never surfaces in AI answers.
+              prompts where {brand} never surfaces in AI answers.
             </span>
           </div>
           <div className="mt-5 grid sm:grid-cols-3 gap-2">
@@ -487,9 +628,11 @@ function InvisibleCallout({
 }
 
 function Competitive({
+  brand,
   competitors,
   totalPrompts,
 }: {
+  brand: string;
   competitors: { competitor_name: string; prompts_won_against_you: number }[];
   totalPrompts: number;
 }) {
@@ -505,7 +648,7 @@ function Competitive({
         Competitive landscape
       </h2>
       <p className="text-muted text-[14px] mb-6">
-        Who outranks {BRAND} across the {totalPrompts} prompts in scope.
+        Who outranks {brand} across the {totalPrompts} prompts in scope.
       </p>
       <div className="space-y-4">
         {competitors.map((c, i) => {
@@ -807,11 +950,13 @@ function Methodology({
 }
 
 function PaidMedia({
+  media,
   states,
   onSend,
   onReset,
   onAccept,
 }: {
+  media: Media[];
   states: StateMap;
   onSend: (m: Media) => void;
   onReset: (id: string) => void;
@@ -837,7 +982,7 @@ function PaidMedia({
       </div>
 
       <div className="grid md:grid-cols-4 gap-5">
-        {MEDIA.map((m, i) => (
+        {media.map((m, i) => (
           <MediaCard
             key={m.id}
             media={m}
@@ -848,7 +993,7 @@ function PaidMedia({
             onAccept={() => onAccept(m.id)}
           />
         ))}
-        <SeeMoreCard index={MEDIA.length} />
+        <SeeMoreCard index={media.length} />
       </div>
     </motion.div>
   );

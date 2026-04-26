@@ -1,8 +1,6 @@
-// Data accessor for the /report page. Reads the mock JSON the backend
-// will eventually serve, narrows to the UI-relevant fields, and exposes
-// small formatters used across sections.
-
-import raw from "@/Data/Mock.json";
+// Live data accessor for the /report page. Fetches the full ROI analysis
+// from the deployed backend and exposes the UI types + small formatters
+// used across sections.
 
 export type Competitor = {
   competitor_name: string;
@@ -142,18 +140,21 @@ export type PeecRoot = {
   prep: PrepData;
 };
 
-const root = raw as unknown as PeecRoot;
+export const API_BASE_URL = "https://hackathon-470511209824.europe-west1.run.app";
+export const DEFAULT_PROJECT_ID = "or_47ccb54e-0f32-4c95-b460-6a070499d084";
+export const FETCH_TIMEOUT_MS = 120_000;
 
-export const BRAND = root.company_name;
-export const executiveSummary = root.executive_summary ?? "";
-export const acv = root.acv;
-export const bracket = root.bracket;
-export const prep = root.prep;
-export const pessimistic = root.pessimistic;
-export const optimistic = root.optimistic;
-
-// Default scenario the rest of the report renders against.
-export const data = optimistic;
+export async function fetchReport(
+  projectId: string = DEFAULT_PROJECT_ID,
+  signal?: AbortSignal,
+): Promise<PeecRoot> {
+  const url = `${API_BASE_URL}/roi/full-analysis?peec_project_id=${encodeURIComponent(projectId)}`;
+  const res = await fetch(url, { signal, cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`backend ${res.status}`);
+  }
+  return (await res.json()) as PeecRoot;
+}
 
 export function formatEuro(n: number, withSign = false): string {
   const rounded = Math.round(n);
@@ -178,19 +179,22 @@ export function formatUsdRange(p: PaidMediaPricing): string {
   return `up to $${(hi ?? 0).toLocaleString("en-US")}`;
 }
 
-export function lowestVisibilityPrompts(n: number): PromptRevenue[] {
+export function lowestVisibilityPrompts(
+  root: PeecRoot,
+  n: number,
+): PromptRevenue[] {
   return [...root.prompt_revenues]
     .sort((a, b) => a.your_visibility - b.your_visibility)
     .slice(0, n);
 }
 
-export function topActions(n: number): TopAction[] {
-  return data.top_actions.slice(0, n);
+export function topActions(slice: ReportSlice, n: number): TopAction[] {
+  return slice.top_actions.slice(0, n);
 }
 
-export function competitorsRanked(): Competitor[] {
-  return [...data.competitive_landscape].sort(
-    (a, b) => b.prompts_won_against_you - a.prompts_won_against_you
+export function competitorsRanked(slice: ReportSlice): Competitor[] {
+  return [...slice.competitive_landscape].sort(
+    (a, b) => b.prompts_won_against_you - a.prompts_won_against_you,
   );
 }
 
@@ -201,8 +205,11 @@ export type PromptDetail = Omit<PromptRevenue, "pessimistic" | "optimistic"> &
     action: TopAction | null;
   };
 
-export function allPromptsByLift(): PromptDetail[] {
-  const actionsById = new Map(data.top_actions.map((a) => [a.prompt_id, a]));
+export function allPromptsByLift(
+  root: PeecRoot,
+  slice: ReportSlice,
+): PromptDetail[] {
+  const actionsById = new Map(slice.top_actions.map((a) => [a.prompt_id, a]));
   return root.prompt_revenues
     .map((p) => {
       const { pessimistic: pess, optimistic: opt, ...rest } = p;
@@ -217,6 +224,9 @@ export function allPromptsByLift(): PromptDetail[] {
     .sort((a, b) => b.revenue_lift_eur - a.revenue_lift_eur);
 }
 
-export function paidMediaOpportunities(n = 3): PaidMediaOpportunity[] {
-  return prep.paid_media_opportunities.slice(0, n);
+export function paidMediaOpportunities(
+  root: PeecRoot,
+  n = 3,
+): PaidMediaOpportunity[] {
+  return root.prep.paid_media_opportunities.slice(0, n);
 }

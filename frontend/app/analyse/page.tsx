@@ -134,7 +134,7 @@ export default function AnalysePage() {
           {/* LEFT — Knoten-System */}
           <div className="relative">
             <svg
-              className="absolute left-[27px] top-12 bottom-12 w-0.5 -z-0"
+              className="absolute left-[27px] top-12 bottom-[88px] w-0.5 -z-0"
               width="2"
               height="100%"
               preserveAspectRatio="none"
