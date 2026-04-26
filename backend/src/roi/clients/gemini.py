@@ -67,6 +67,34 @@ async def _call_gemini_no_retry(contents: str) -> str:
     return response.text
 
 
+async def synthesize_umbrella_summary(facts: dict, timeout_s: float = 20.0) -> str:
+    """Single executive summary covering BOTH the pessimistic and optimistic scenarios.
+
+    Same safety net as `synthesize_summary` — returns "" on any failure.
+    Used by /roi/full-analysis so the response has one summary rather than two."""
+    prompt = (
+        f"You are writing an executive summary for a B2B sales/marketing leader at "
+        f"{facts.get('company', 'this company')}.\n"
+        f"The data shows their current AI-search visibility, the revenue at risk under "
+        f"two scenarios (pessimistic = 60% effectiveness, optimistic = 100%), and the "
+        f"top paid-media platforms where competitors appear and they don't.\n\n"
+        f"Write 3-4 sentences in plain prose. Lead with the revenue lift as a RANGE "
+        f"in € (pessimistic → optimistic) and the customer-equivalent range. Name the "
+        f"competitor they trail and the visibility gap in percentage points. End with "
+        f"a concrete focus call: name 1-2 specific paid-media platforms where placement "
+        f"would close the gap.\n\n"
+        f"Rules: no headings, bullets, intro, or preamble. No marketing buzzwords. "
+        f"Use the specific numbers from the data. Frame the range honestly.\n\n"
+        f"Data:\n{json.dumps(facts, indent=2)}"
+    )
+    try:
+        text = await asyncio.wait_for(_call_gemini_no_retry(prompt), timeout=timeout_s)
+        return (text or "").strip()[:1000]
+    except Exception as e:
+        print(f"[gemini] synthesize_umbrella_summary failed ({type(e).__name__}: {e}); returning empty")
+        return ""
+
+
 async def synthesize_summary(facts: dict, timeout_s: float = 20.0) -> str:
     """Generate a 2-3 sentence executive summary from computed stats.
 

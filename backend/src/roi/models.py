@@ -70,6 +70,34 @@ class PromptRevenue(BaseModel):
     target_position: float
     target_annual_revenue_eur: float
     revenue_lift_eur: float
+    ai_summary: str = "this will be the ai summary"  # populated later by Pioneer (Fastino)
+
+
+class ScenarioOutcome(BaseModel):
+    """Per-scenario lift result for a single prompt."""
+    target_visibility: float
+    target_position: float
+    target_annual_revenue_eur: float
+    revenue_lift_eur: float
+
+
+class PromptRevenueDual(BaseModel):
+    """Per-prompt revenue with both scenarios baked in. Used at the top level
+    of EnhancedFinalReport so Pioneer gets a single payload with full context."""
+    prompt_id: str
+    prompt_message: str
+    volume_source: Literal["search_volume", "tavily_research", "chat_fallback"]
+    search_volume: int
+    volume_source_urls: list[str] = []
+    your_visibility: float
+    your_position: Optional[float]
+    top_competitor_visibility: float
+    top_competitor_name: str
+    annual_mentions: float
+    current_annual_revenue_eur: float
+    pessimistic: ScenarioOutcome
+    optimistic: ScenarioOutcome
+    ai_summary: str = "this will be the ai summary"
 
 
 class CompetitorStanding(BaseModel):
@@ -131,16 +159,20 @@ class FinalReport(BaseModel):
 
 class EnhancedFinalReport(BaseModel):
     """Combined output of /roi/full-analysis. Contains:
+      - one top-level executive_summary covering both scenarios (Gemini)
       - the prep-pipeline payload (paid-media gap data, baseline, projected vis)
       - two FinalReport objects: lift computed with pessimistic + optimistic deltas
+        (their executive_summary fields are intentionally empty — see the umbrella one above)
       - a top-level scenario bracket for quick comparison
       - the ACV used (researched via Tavily if not user-provided)
     """
     company_name: str
+    executive_summary: str = ""
     acv: AcvInfo
     bracket: ScenarioBracket
-    pessimistic: FinalReport
-    optimistic: FinalReport
+    prompt_revenues: list[PromptRevenueDual]   # merged top 10 with both scenarios + one Pioneer summary
+    pessimistic: FinalReport                   # full report; .prompt_revenues emptied (use top-level instead)
+    optimistic: FinalReport                    # full report; .prompt_revenues emptied (use top-level instead)
     prep: PreparationPayload
 
 

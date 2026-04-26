@@ -16,6 +16,19 @@ async def _safe_executive_summary(facts: dict) -> str:
         return ""
 
 
+async def _safe_pioneer_summaries(prompt_revenues: list[PromptRevenue]) -> None:
+    """Run Pioneer per-prompt summaries and inject into prompt_revenues in place.
+    Lazy-imports the client so even an import failure can't break the pipeline."""
+    try:
+        from ..clients import pioneer
+        summaries = await pioneer.summarize_prompt_revenues(prompt_revenues)
+        for pr, summary in zip(prompt_revenues, summaries):
+            if summary:
+                pr.ai_summary = summary
+    except Exception as e:
+        print(f"[step12] pioneer summaries unavailable ({type(e).__name__}: {e})")
+
+
 def _competitive_landscape(
     setup: ProjectSetup,
     summaries: dict[str, BrandsReportSummary],
@@ -61,12 +74,19 @@ async def run(
     summaries: dict[str, BrandsReportSummary],
     brand_vis: dict[tuple[str, str], float],
     acv_eur: float,
+    skip_summary: bool = False,  # set when the caller will write its own umbrella summary
+    skip_pioneer: bool = False,  # set when the caller will run Pioneer on a merged dual list
 ) -> FinalReport:
     total_current = sum(p.current_annual_revenue_eur for p in prompt_revenues)
     total_target = sum(p.target_annual_revenue_eur for p in prompt_revenues)
     total_lift = sum(p.revenue_lift_eur for p in prompt_revenues)
     sorted_by_lift = sorted(prompt_revenues, key=lambda p: -p.revenue_lift_eur)
     top_10 = sorted_by_lift[:10]
+
+    # Pioneer per-prompt summaries (only the top_10 we'll return) — best-effort,
+    # mutates each PromptRevenue.ai_summary on success, leaves placeholder on failure.
+    if not skip_pioneer:
+        await _safe_pioneer_summaries(top_10)
 
     # Volume-source mix
     real_volume = sum(1 for p in prompt_revenues if p.volume_source in ("search_volume", "tavily_research"))
@@ -108,27 +128,31 @@ async def run(
     print(f"[step12] {untapped}/{len(summaries)} prompts untapped, leader={leader_name} ({leader_vis:.1%} vs you {overall_vis:.1%})")
     print(f"[step12] top3 share={top3_share}%, customer_eq={customer_eq}")
 
-    summary_facts = {
-        "company": setup.own_brand.name,
-        "total_revenue_lift_eur": int(total_lift),
-        "customer_equivalents_per_year": customer_eq,
-        "current_visibility_pct": round(overall_vis * 100, 1),
-        "leader_name": leader_name,
-        "leader_visibility_pct": round(leader_vis * 100, 1),
-        "visibility_gap_pp": visibility_gap_pp,
-        "prompts_total": len(summaries),
-        "prompts_untapped": untapped,
-        "top3_lift_share_pct": top3_share,
-        "top_competitors_beating_you": [
-            {"name": c.competitor_name, "prompts_won": c.prompts_won_against_you}
-            for c in landscape[:3]
-        ],
-    }
-    summary = await _safe_executive_summary(summary_facts)
-    if summary:
-        print(f"[step12] executive_summary: {summary[:140]}{'...' if len(summary) > 140 else ''}")
+    if skip_summary:
+        summary = ""
+        print("[step12] executive_summary skipped (caller will provide umbrella summary)")
     else:
-        print("[step12] executive_summary: (empty — Gemini unavailable, report unaffected)")
+        summary_facts = {
+            "company": setup.own_brand.name,
+            "total_revenue_lift_eur": int(total_lift),
+            "customer_equivalents_per_year": customer_eq,
+            "current_visibility_pct": round(overall_vis * 100, 1),
+            "leader_name": leader_name,
+            "leader_visibility_pct": round(leader_vis * 100, 1),
+            "visibility_gap_pp": visibility_gap_pp,
+            "prompts_total": len(summaries),
+            "prompts_untapped": untapped,
+            "top3_lift_share_pct": top3_share,
+            "top_competitors_beating_you": [
+                {"name": c.competitor_name, "prompts_won": c.prompts_won_against_you}
+                for c in landscape[:3]
+            ],
+        }
+        summary = await _safe_executive_summary(summary_facts)
+        if summary:
+            print(f"[step12] executive_summary: {summary[:140]}{'...' if len(summary) > 140 else ''}")
+        else:
+            print("[step12] executive_summary: (empty — Gemini unavailable, report unaffected)")
 
     return FinalReport(
         total_current_annual_revenue_eur=total_current,
