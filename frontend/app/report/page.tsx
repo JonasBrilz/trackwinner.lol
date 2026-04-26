@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -28,13 +27,12 @@ import {
 } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import {
-  DEFAULT_PROJECT_ID,
   allPromptsByLift,
-  cachedReport,
   competitorsRanked,
   formatEuro,
   formatPct,
   formatUsdRange,
+  getReport,
   lowestVisibilityPrompts,
   paidMediaOpportunities,
   type Bracket,
@@ -126,40 +124,7 @@ const buildInitialStateMap = (media: Media[]): StateMap =>
   }, {});
 
 export default function ReportPage() {
-  return (
-    <Suspense fallback={null}>
-      <ReportPageInner />
-    </Suspense>
-  );
-}
-
-function ReportPageInner() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const projectId = searchParams.get("project") ?? DEFAULT_PROJECT_ID;
-
-  // The report page never fetches itself — /analyse is the only place
-  // that talks to the backend, so the cool loading screen is the only
-  // loading screen the user ever sees. If the cache is empty (direct
-  // navigation, refresh after sessionStorage cleared), bounce back to
-  // /analyse, which will fetch and redirect here when ready.
-  const [root, setRoot] = useState<PeecRoot | null>(null);
-
-  useEffect(() => {
-    const cached = cachedReport(projectId);
-    if (cached) {
-      setRoot(cached);
-      return;
-    }
-    const target =
-      projectId === DEFAULT_PROJECT_ID
-        ? "/analyse"
-        : `/analyse?project=${encodeURIComponent(projectId)}`;
-    router.replace(target);
-  }, [projectId, router]);
-
-  if (!root) return null;
-  return <ReportView root={root} />;
+  return <ReportView root={getReport()} />;
 }
 
 function ReportView({ root }: { root: PeecRoot }) {

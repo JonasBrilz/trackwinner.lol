@@ -1,6 +1,8 @@
-// Live data accessor for the /report page. Fetches the full ROI analysis
-// from the deployed backend and exposes the UI types + small formatters
-// used across sections.
+// Data accessor for the /report page. Reads the static Mock.json fixture
+// (the demo intentionally fakes the backend — output is identical) and
+// exposes the UI types + small formatters used across sections.
+
+import mockRaw from "@/Data/Mock.json";
 
 export type Competitor = {
   competitor_name: string;
@@ -140,43 +142,12 @@ export type PeecRoot = {
   prep: PrepData;
 };
 
-export const API_BASE_URL = "https://hackathon-470511209824.europe-west1.run.app";
-export const DEFAULT_PROJECT_ID = "or_47ccb54e-0f32-4c95-b460-6a070499d084";
-export const FETCH_TIMEOUT_MS = 120_000;
+export const DEFAULT_PROJECT_ID = "mock";
 
-const REPORT_CACHE_PREFIX = "peec.report.v1.";
+const MOCK_ROOT = mockRaw as unknown as PeecRoot;
 
-export function cachedReport(projectId: string): PeecRoot | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = sessionStorage.getItem(REPORT_CACHE_PREFIX + projectId);
-    return raw ? (JSON.parse(raw) as PeecRoot) : null;
-  } catch {
-    return null;
-  }
-}
-
-export function cacheReport(projectId: string, root: PeecRoot): void {
-  if (typeof window === "undefined") return;
-  try {
-    sessionStorage.setItem(REPORT_CACHE_PREFIX + projectId, JSON.stringify(root));
-  } catch {
-    /* noop */
-  }
-}
-
-export async function fetchReport(
-  projectId: string = DEFAULT_PROJECT_ID,
-  signal?: AbortSignal,
-): Promise<PeecRoot> {
-  // Routed through the Next.js proxy (app/api/roi/full-analysis) to avoid
-  // browser CORS — the backend doesn't set Access-Control-Allow-Origin.
-  const url = `/api/roi/full-analysis?peec_project_id=${encodeURIComponent(projectId)}`;
-  const res = await fetch(url, { signal, cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`backend ${res.status}`);
-  }
-  return (await res.json()) as PeecRoot;
+export function getReport(): PeecRoot {
+  return MOCK_ROOT;
 }
 
 export function formatEuro(n: number, withSign = false): string {
