@@ -132,42 +132,43 @@ export default function AnalysePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
           {/* LEFT — Knoten-System */}
-          <div className="relative">
-            <svg
-              className="absolute left-[27px] top-12 bottom-[88px] w-0.5 -z-0"
-              width="2"
-              height="100%"
-              preserveAspectRatio="none"
-            >
-              <line
-                x1="1"
-                y1="0"
-                x2="1"
-                y2="100%"
-                stroke="#e5e5e2"
-                strokeWidth="2"
-              />
-              <motion.line
-                x1="1"
-                y1="0"
-                x2="1"
-                y2="100%"
-                stroke="#0a0a0a"
-                strokeWidth="2"
-                initial={{ pathLength: 0 }}
-                animate={{
-                  pathLength:
-                    activeNode === 0
-                      ? 0.15
-                      : activeNode === 1
-                      ? 0.55
-                      : 1,
-                }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
-              />
-            </svg>
+          <div>
+            <div className="relative">
+              <svg
+                className="absolute left-[27px] top-12 bottom-[60px] w-0.5 -z-0"
+                width="2"
+                height="100%"
+                preserveAspectRatio="none"
+              >
+                <line
+                  x1="1"
+                  y1="0"
+                  x2="1"
+                  y2="100%"
+                  stroke="#e5e5e2"
+                  strokeWidth="2"
+                />
+                <motion.line
+                  x1="1"
+                  y1="0"
+                  x2="1"
+                  y2="100%"
+                  stroke="#0a0a0a"
+                  strokeWidth="2"
+                  initial={{ pathLength: 0 }}
+                  animate={{
+                    pathLength:
+                      activeNode === 0
+                        ? 0.15
+                        : activeNode === 1
+                        ? 0.55
+                        : 1,
+                  }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                />
+              </svg>
 
-            <div className="space-y-6 relative z-10">
+              <div className="space-y-6 relative z-10">
               {NODES.map((node, idx) => {
                 const state = stateOf(idx);
                 const Icon = node.icon;
@@ -231,6 +232,7 @@ export default function AnalysePage() {
                   </motion.div>
                 );
               })}
+              </div>
             </div>
           </div>
 
