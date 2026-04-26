@@ -148,7 +148,9 @@ export async function fetchReport(
   projectId: string = DEFAULT_PROJECT_ID,
   signal?: AbortSignal,
 ): Promise<PeecRoot> {
-  const url = `${API_BASE_URL}/roi/full-analysis?peec_project_id=${encodeURIComponent(projectId)}`;
+  // Routed through the Next.js proxy (app/api/roi/full-analysis) to avoid
+  // browser CORS — the backend doesn't set Access-Control-Allow-Origin.
+  const url = `/api/roi/full-analysis?peec_project_id=${encodeURIComponent(projectId)}`;
   const res = await fetch(url, { signal, cache: "no-store" });
   if (!res.ok) {
     throw new Error(`backend ${res.status}`);
