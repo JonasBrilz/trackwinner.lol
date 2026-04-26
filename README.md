@@ -13,7 +13,7 @@ trackwinner.lol uses the Peec AI MCP to track how brands appear across LLMs, qua
 | Tool | Role |
 |---|---|
 | [Peec AI](https://peec.ai) | AI visibility tracking & brand mention data via MCP |
-| [Google DeepMind](https://deepmind.google/) | Frontier multimodal AI models |
+| [Google DeepMind](https://deepmind.google/) | Frontier multimodal AI models and Deployment on [trackwinner.lol](https://trackwinner.lol/) |
 | [Tavily](https://www.tavily.com/) | Real-time web search & research |
 | [Pioneer](https://pioneer.ai/) by [Fastino](https://fastino.ai/) | Customized AI responses via fine-tuned models |
 
