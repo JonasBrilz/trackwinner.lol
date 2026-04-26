@@ -144,6 +144,27 @@ export const API_BASE_URL = "https://hackathon-470511209824.europe-west1.run.app
 export const DEFAULT_PROJECT_ID = "or_47ccb54e-0f32-4c95-b460-6a070499d084";
 export const FETCH_TIMEOUT_MS = 120_000;
 
+const REPORT_CACHE_PREFIX = "peec.report.v1.";
+
+export function cachedReport(projectId: string): PeecRoot | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(REPORT_CACHE_PREFIX + projectId);
+    return raw ? (JSON.parse(raw) as PeecRoot) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function cacheReport(projectId: string, root: PeecRoot): void {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(REPORT_CACHE_PREFIX + projectId, JSON.stringify(root));
+  } catch {
+    /* noop */
+  }
+}
+
 export async function fetchReport(
   projectId: string = DEFAULT_PROJECT_ID,
   signal?: AbortSignal,

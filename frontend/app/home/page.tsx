@@ -264,11 +264,8 @@ export default function HomePage() {
                   placeholder="value in EUR"
                   value={arpu}
                   onChange={(e) => setArpu(e.target.value)}
-                  className="w-full h-11 pl-7 pr-12 rounded-xl bg-white border border-line text-[15px] focus:outline-none focus:border-ink/40 transition"
+                  className="w-full h-11 pl-7 pr-3.5 rounded-xl bg-white border border-line text-[15px] focus:outline-none focus:border-ink/40 transition"
                 />
-                <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[12px] text-muted pointer-events-none">
-                  / year
-                </span>
               </div>
             </div>
           </div>

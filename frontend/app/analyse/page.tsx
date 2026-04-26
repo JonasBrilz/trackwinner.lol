@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Database,
@@ -10,9 +10,17 @@ import {
   Check,
   Loader2,
   ArrowRight,
+  AlertTriangle,
+  RotateCcw,
 } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import { STORAGE_KEY } from "@/lib/paidMedia";
+import {
+  DEFAULT_PROJECT_ID,
+  FETCH_TIMEOUT_MS,
+  cacheReport,
+  fetchReport,
+} from "@/lib/peec";
 type StepState = "pending" | "active" | "done";
 
 const NODES = [
@@ -60,10 +68,28 @@ const THINKING_PER_NODE: string[][] = [
 const STEP_DURATION = 900;
 
 export default function AnalysePage() {
+  return (
+    <Suspense fallback={null}>
+      <AnalysePageInner />
+    </Suspense>
+  );
+}
+
+function AnalysePageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const projectId = searchParams.get("project") ?? DEFAULT_PROJECT_ID;
+
   const [activeNode, setActiveNode] = useState(0);
   const [thinkingIdx, setThinkingIdx] = useState(0);
   const [doneNodes, setDoneNodes] = useState<number[]>([]);
+  const [fetchStatus, setFetchStatus] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
+  const reachedFinalRef = useRef(false);
+  const animationDoneRef = useRef(false);
+  const [animationDone, setAnimationDone] = useState(false);
+  const [, forceRender] = useState(0);
 
   useEffect(() => {
     try {
@@ -73,34 +99,85 @@ export default function AnalysePage() {
     }
   }, []);
 
+  // Kick off the real fetch on mount; cache the result so /report can render
+  // immediately without showing its own loading screen.
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    setFetchStatus("loading");
+
+    fetchReport(projectId, controller.signal)
+      .then((root) => {
+        cacheReport(projectId, root);
+        setFetchStatus("ready");
+      })
+      .catch(() => setFetchStatus("error"))
+      .finally(() => clearTimeout(timeout));
+
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [projectId]);
+
+  // Animation loop: advance through the three nodes. Stops on the final
+  // step and waits for the fetch to resolve before navigating to /report.
+  useEffect(() => {
+    if (fetchStatus === "error") return;
+
     const timer = setInterval(() => {
       setThinkingIdx((prev) => {
         const stepsForCurrent = THINKING_PER_NODE[activeNode];
         if (prev < stepsForCurrent.length - 1) {
           return prev + 1;
         }
-        // Step für diesen Knoten fertig
-        setDoneNodes((d) => (d.includes(activeNode) ? d : [...d, activeNode]));
         if (activeNode < NODES.length - 1) {
+          setDoneNodes((d) =>
+            d.includes(activeNode) ? d : [...d, activeNode],
+          );
           setActiveNode((n) => n + 1);
           return 0;
-        } else {
-          clearInterval(timer);
-          setTimeout(() => router.push("/report"), 1200);
-          return prev;
         }
+        // Reached the final node's last thinking step: stop the cycle.
+        // Don't mark it done yet — we keep the spinner running until
+        // the fetch lands.
+        reachedFinalRef.current = true;
+        clearInterval(timer);
+        animationDoneRef.current = true;
+        setAnimationDone(true);
+        forceRender((n) => n + 1);
+        return prev;
       });
     }, STEP_DURATION);
 
     return () => clearInterval(timer);
-  }, [activeNode, router]);
+  }, [activeNode, fetchStatus]);
+
+  // When both the animation has reached the final step AND the fetch
+  // resolved, mark the third node done and navigate.
+  useEffect(() => {
+    if (fetchStatus !== "ready" || !animationDone) return;
+    setDoneNodes((d) =>
+      d.includes(NODES.length - 1) ? d : [...d, NODES.length - 1],
+    );
+    const t = setTimeout(() => {
+      const target = projectId === DEFAULT_PROJECT_ID
+        ? "/report"
+        : `/report?project=${encodeURIComponent(projectId)}`;
+      router.push(target);
+    }, 700);
+    return () => clearTimeout(t);
+  }, [fetchStatus, animationDone, projectId, router]);
 
   const stateOf = (idx: number): StepState => {
     if (doneNodes.includes(idx)) return "done";
     if (idx === activeNode) return "active";
     return "pending";
   };
+
+  if (fetchStatus === "error") {
+    return <AnalyseError />;
+  }
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -325,6 +402,33 @@ export default function AnalysePage() {
           </div>
         </div>
       </motion.section>
+    </main>
+  );
+}
+
+function AnalyseError() {
+  return (
+    <main className="min-h-screen flex flex-col">
+      <BrandMark className="fixed top-5 left-6 z-50" />
+      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 gap-4">
+        <div className="w-12 h-12 rounded-xl bg-canvas border border-line flex items-center justify-center">
+          <AlertTriangle className="w-5 h-5 text-ink/70" />
+        </div>
+        <div className="text-[20px] font-semibold tracking-tight">
+          Analysis service unavailable
+        </div>
+        <p className="text-muted text-[14px] max-w-md leading-relaxed">
+          We couldn&rsquo;t reach the analysis backend. Please try again in a
+          moment.
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 px-4 h-10 rounded-xl bg-ink text-white text-[14px] font-medium hover:bg-ink/90 transition flex items-center gap-2"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Try again
+        </button>
+      </div>
     </main>
   );
 }

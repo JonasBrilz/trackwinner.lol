@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
@@ -24,16 +24,14 @@ import {
   Cpu,
   RotateCcw,
   Plus,
-  AlertTriangle,
   type LucideIcon,
 } from "lucide-react";
 import BrandMark from "@/components/BrandMark";
 import {
   DEFAULT_PROJECT_ID,
-  FETCH_TIMEOUT_MS,
   allPromptsByLift,
+  cachedReport,
   competitorsRanked,
-  fetchReport,
   formatEuro,
   formatPct,
   formatUsdRange,
@@ -127,90 +125,41 @@ const buildInitialStateMap = (media: Media[]): StateMap =>
     return acc;
   }, {});
 
-type FetchState =
-  | { status: "loading" }
-  | { status: "error" }
-  | { status: "ready"; root: PeecRoot };
-
 export default function ReportPage() {
   return (
-    <Suspense fallback={<LoadingScreen />}>
+    <Suspense fallback={null}>
       <ReportPageInner />
     </Suspense>
   );
 }
 
 function ReportPageInner() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const projectId = searchParams.get("project") ?? DEFAULT_PROJECT_ID;
 
-  const [fetchState, setFetchState] = useState<FetchState>({ status: "loading" });
+  // The report page never fetches itself — /analyse is the only place
+  // that talks to the backend, so the cool loading screen is the only
+  // loading screen the user ever sees. If the cache is empty (direct
+  // navigation, refresh after sessionStorage cleared), bounce back to
+  // /analyse, which will fetch and redirect here when ready.
+  const [root, setRoot] = useState<PeecRoot | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-    setFetchState({ status: "loading" });
+    const cached = cachedReport(projectId);
+    if (cached) {
+      setRoot(cached);
+      return;
+    }
+    const target =
+      projectId === DEFAULT_PROJECT_ID
+        ? "/analyse"
+        : `/analyse?project=${encodeURIComponent(projectId)}`;
+    router.replace(target);
+  }, [projectId, router]);
 
-    fetchReport(projectId, controller.signal)
-      .then((root) => setFetchState({ status: "ready", root }))
-      .catch(() => setFetchState({ status: "error" }))
-      .finally(() => clearTimeout(timeout));
-
-    return () => {
-      clearTimeout(timeout);
-      controller.abort();
-    };
-  }, [projectId]);
-
-  if (fetchState.status === "loading") {
-    return <LoadingScreen />;
-  }
-  if (fetchState.status === "error") {
-    return <ErrorScreen />;
-  }
-  return <ReportView root={fetchState.root} />;
-}
-
-function LoadingScreen() {
-  return (
-    <main className="min-h-screen flex flex-col">
-      <BrandMark className="fixed top-5 left-6 z-50 no-print" />
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 gap-4">
-        <Loader2 className="w-8 h-8 animate-spin text-ink/70" />
-        <div className="text-[20px] font-semibold tracking-tight">Analyzing…</div>
-        <p className="text-muted text-[14px] max-w-md leading-relaxed">
-          Running the full AI-visibility pipeline. This first pass typically takes
-          60–90 seconds.
-        </p>
-      </div>
-    </main>
-  );
-}
-
-function ErrorScreen() {
-  return (
-    <main className="min-h-screen flex flex-col">
-      <BrandMark className="fixed top-5 left-6 z-50 no-print" />
-      <div className="flex-1 flex flex-col items-center justify-center text-center px-6 gap-4">
-        <div className="w-12 h-12 rounded-xl bg-canvas border border-line flex items-center justify-center">
-          <AlertTriangle className="w-5 h-5 text-ink/70" />
-        </div>
-        <div className="text-[20px] font-semibold tracking-tight">
-          Analysis service unavailable
-        </div>
-        <p className="text-muted text-[14px] max-w-md leading-relaxed">
-          We couldn&rsquo;t reach the analysis backend. Please try again in a moment.
-        </p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-2 px-4 h-10 rounded-xl bg-ink text-white text-[14px] font-medium hover:bg-ink/90 transition flex items-center gap-2"
-        >
-          <RotateCcw className="w-4 h-4" />
-          Try again
-        </button>
-      </div>
-    </main>
-  );
+  if (!root) return null;
+  return <ReportView root={root} />;
 }
 
 function ReportView({ root }: { root: PeecRoot }) {
@@ -325,6 +274,7 @@ function ReportView({ root }: { root: PeecRoot }) {
         <Header brand={username.toUpperCase()} />
 
         <Hero
+          brand={brand}
           pessimisticLift={bracket.pessimistic_total_revenue_lift_eur}
           optimisticLift={bracket.optimistic_total_revenue_lift_eur}
           pessimisticCustomers={bracket.pessimistic_customer_equivalents}
@@ -404,6 +354,7 @@ function Header({ brand }: { brand: string }) {
 }
 
 function Hero({
+  brand,
   pessimisticLift,
   optimisticLift,
   pessimisticCustomers,
@@ -413,6 +364,7 @@ function Hero({
   summary,
   acvSource,
 }: {
+  brand: string;
   pessimisticLift: number;
   optimisticLift: number;
   pessimisticCustomers: number;
@@ -436,7 +388,7 @@ function Hero({
       <div className="relative">
         <div className="text-[13px] uppercase tracking-wider text-white/60 mb-3 flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5" />
-          Potential gain · annual
+          Potential financial gain for {brand}
         </div>
         <div className="text-[clamp(2.5rem,8.5vw,5.5rem)] font-semibold tracking-[-0.04em] leading-[1.02] text-gain tabular-nums">
           {formatEuro(pessimisticLift)}
