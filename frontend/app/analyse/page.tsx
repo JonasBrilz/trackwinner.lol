@@ -19,7 +19,7 @@ const NODES = [
   {
     id: "data",
     title: "Data capture",
-    desc: "We pull together all relevant business data — revenue, costs, market position.",
+    desc: "We aggregate the business data that matters — revenue, costs, market position.",
     icon: Database,
   },
   {
@@ -31,7 +31,7 @@ const NODES = [
   {
     id: "calc",
     title: "Untapped potential",
-    desc: "We compute the revenue you’re leaving on the table, lever by lever.",
+    desc: "We model the missed revenue across every relevant prompt.",
     icon: Calculator,
   },
 ];
@@ -123,10 +123,10 @@ export default function AnalysePage() {
             Analysis running
           </div>
           <h1 className="text-[clamp(2rem,5vw,3.5rem)] font-semibold tracking-[-0.03em] leading-[1.05]">
-            We&apos;re understanding <span className="text-muted">your company</span>
+            Mapping your <span className="text-muted">AI-search footprint</span>
           </h1>
           <p className="mt-4 text-[16px] text-muted max-w-xl mx-auto">
-            Three steps. One goal: surface where your profit potential is hiding.
+            Three passes. One outcome: surface the pipeline you're missing in AI search.
           </p>
         </motion.div>
 

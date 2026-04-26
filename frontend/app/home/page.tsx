@@ -17,11 +17,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import {
-  ANALYSIS_FLAG,
-  VORJAHRES_ARPU,
-  saveContext,
-} from "@/lib/paidMedia";
+import { ANALYSIS_FLAG, saveContext } from "@/lib/paidMedia";
 
 type RateMode = "standard" | "manual" | "crm";
 
@@ -51,9 +47,8 @@ export default function HomePage() {
     saveContext({
       visitToLead: Number.isFinite(v2l) ? v2l : STANDARD_VISIT_TO_LEAD,
       leadToCustomer: Number.isFinite(l2c) ? l2c : STANDARD_LEAD_TO_CUSTOMER,
-      avgRevenuePerCustomer: Number.isFinite(arpuNum) && arpuNum > 0
-        ? arpuNum
-        : VORJAHRES_ARPU,
+      avgRevenuePerCustomer:
+        Number.isFinite(arpuNum) && arpuNum > 0 ? arpuNum : undefined,
     });
   }, [mode, visitToLead, leadToCustomer, arpu]);
 
@@ -82,10 +77,11 @@ export default function HomePage() {
             className="lg:col-span-7"
           >
             <h1 className="text-[clamp(2.75rem,7.5vw,5.75rem)] font-semibold tracking-[-0.045em] leading-[1.0]">
-              Find out
+              Your untapped
               <br />
-              where you&apos;re leaving<br />
-              <span className="text-muted">money on the table.</span>
+              revenue
+              <br />
+              <span className="text-muted">potential.</span>
             </h1>
           </motion.div>
 
@@ -96,9 +92,10 @@ export default function HomePage() {
             className="lg:col-span-5 flex flex-col justify-end"
           >
             <p className="text-[18px] text-muted leading-relaxed">
-              Peec AI scans your business data, surfaces untapped revenue
-              levers, and shows you in three steps how much revenue you&apos;re
-              leaving on the table — before your competitors get there first.
+              ChatGPT, Perplexity, Claude, and Gemini already shape a third of
+              every B2B shortlist. Peec AI surfaces the prompts your buyers
+              actually ask, the competitors winning those answers, and the
+              pipeline you unlock by showing up first.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-2">
@@ -264,7 +261,7 @@ export default function HomePage() {
                   inputMode="decimal"
                   min="0"
                   step="1"
-                  placeholder={`${VORJAHRES_ARPU} (last year)`}
+                  placeholder="value in EUR"
                   value={arpu}
                   onChange={(e) => setArpu(e.target.value)}
                   className="w-full h-11 pl-7 pr-12 rounded-xl bg-white border border-line text-[15px] focus:outline-none focus:border-ink/40 transition"
@@ -330,18 +327,18 @@ export default function HomePage() {
         >
           <StepCard
             n="01"
-            title="Data capture"
-            desc="Business data, revenue, and market position are ingested."
+            title="Plug in"
+            desc="Drop in your revenue model and the prompts your buyers ask. No integration, no setup call — minutes to first signal."
           />
           <StepCard
             n="02"
-            title="Market analysis"
-            desc="Benchmarked against competitors; revenue levers identified."
+            title="Benchmark"
+            desc="We score your visibility against every category leader across ChatGPT, Perplexity, Claude, and Gemini — prompt by prompt."
           />
           <StepCard
             n="03"
-            title="Untapped potential"
-            desc="We compute the revenue you’re leaving on the table."
+            title="Capture"
+            desc="Get a euro-denominated forecast of the pipeline at stake — with the exact placements and content that win the answer."
           />
         </motion.div>
       </section>

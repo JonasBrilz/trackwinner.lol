@@ -15,8 +15,6 @@ export const CONTEXT_KEY = "peec.offer.context.v1";
 export const ANALYSIS_FLAG = "peec.hasAnalysis";
 export const NOTIFY_EMAIL = "kalwajonas@gmail.com";
 
-export const VORJAHRES_ARPU = 4800;
-
 export type OfferContext = {
   visitToLead?: number;
   leadToCustomer?: number;

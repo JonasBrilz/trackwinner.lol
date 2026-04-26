@@ -10,7 +10,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "PAI — Profit Analysis Intelligence",
-  description: "See where your company is leaving money on the table.",
+  description: "Quantify the pipeline AI-driven search isn't sending you.",
 };
 
 export default function RootLayout({

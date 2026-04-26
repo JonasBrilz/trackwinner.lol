@@ -11,6 +11,13 @@ export type Competitor = {
   your_avg_visibility: number;
 };
 
+export type PromptRevenueScenario = {
+  target_visibility: number;
+  target_position: number;
+  target_annual_revenue_eur: number;
+  revenue_lift_eur: number;
+};
+
 export type PromptRevenue = {
   prompt_id: string;
   prompt_message: string;
@@ -23,10 +30,9 @@ export type PromptRevenue = {
   top_competitor_name: string;
   annual_mentions: number;
   current_annual_revenue_eur: number;
-  target_visibility: number;
-  target_position: number;
-  target_annual_revenue_eur: number;
-  revenue_lift_eur: number;
+  pessimistic: PromptRevenueScenario;
+  optimistic: PromptRevenueScenario;
+  ai_summary?: string;
 };
 
 export type TopAction = {
@@ -56,7 +62,6 @@ export type ReportSlice = {
     sources: string[];
     rationale: string;
   };
-  prompt_revenues: PromptRevenue[];
   top_actions: TopAction[];
   executive_summary?: string;
 };
@@ -120,9 +125,18 @@ export type PrepData = {
   warnings: string[];
 };
 
+export type Acv = {
+  value_eur: number;
+  source?: string;
+  notes?: string;
+};
+
 export type PeecRoot = {
   company_name: string;
+  executive_summary?: string;
+  acv?: Acv;
   bracket: Bracket;
+  prompt_revenues: PromptRevenue[];
   pessimistic: ReportSlice;
   optimistic: ReportSlice;
   prep: PrepData;
@@ -131,6 +145,8 @@ export type PeecRoot = {
 const root = raw as unknown as PeecRoot;
 
 export const BRAND = root.company_name;
+export const executiveSummary = root.executive_summary ?? "";
+export const acv = root.acv;
 export const bracket = root.bracket;
 export const prep = root.prep;
 export const pessimistic = root.pessimistic;
@@ -163,7 +179,7 @@ export function formatUsdRange(p: PaidMediaPricing): string {
 }
 
 export function lowestVisibilityPrompts(n: number): PromptRevenue[] {
-  return [...data.prompt_revenues]
+  return [...root.prompt_revenues]
     .sort((a, b) => a.your_visibility - b.your_visibility)
     .slice(0, n);
 }
@@ -178,15 +194,27 @@ export function competitorsRanked(): Competitor[] {
   );
 }
 
-export type PromptDetail = PromptRevenue & {
-  action: TopAction | null;
-};
+export type PromptDetail = Omit<PromptRevenue, "pessimistic" | "optimistic"> &
+  PromptRevenueScenario & {
+    pessimistic_revenue_lift_eur: number;
+    optimistic_revenue_lift_eur: number;
+    action: TopAction | null;
+  };
 
 export function allPromptsByLift(): PromptDetail[] {
   const actionsById = new Map(data.top_actions.map((a) => [a.prompt_id, a]));
-  return [...data.prompt_revenues]
-    .sort((a, b) => b.revenue_lift_eur - a.revenue_lift_eur)
-    .map((p) => ({ ...p, action: actionsById.get(p.prompt_id) ?? null }));
+  return root.prompt_revenues
+    .map((p) => {
+      const { pessimistic: pess, optimistic: opt, ...rest } = p;
+      return {
+        ...rest,
+        ...opt,
+        pessimistic_revenue_lift_eur: pess.revenue_lift_eur,
+        optimistic_revenue_lift_eur: opt.revenue_lift_eur,
+        action: actionsById.get(p.prompt_id) ?? null,
+      };
+    })
+    .sort((a, b) => b.revenue_lift_eur - a.revenue_lift_eur);
 }
 
 export function paidMediaOpportunities(n = 3): PaidMediaOpportunity[] {
