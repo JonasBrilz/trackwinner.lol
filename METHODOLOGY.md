@@ -94,3 +94,8 @@ Two things this model cannot measure even with every system connected:
 ## 7. Bottom line
 
 The forecast is one company-specific number (ARPU) and ten multipliers stacked on top of Peec data. Five of those ten have public industry data behind them, two are model outputs, and three are internal assumptions. A CRM and analytics connection removes the assumptions and gives the brand a measurement-grade version of the same forecast within weeks. The methodology does not change with data quality; only the confidence does.
+
+---
+
+# Part 2: How we compute the lift in euros
+... (59 Zeilen verbleibend)
