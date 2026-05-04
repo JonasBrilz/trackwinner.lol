@@ -74,25 +74,30 @@ export default function AnalysePage() {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setThinkingIdx((prev) => {
-        const stepsForCurrent = THINKING_PER_NODE[activeNode];
-        if (prev < stepsForCurrent.length - 1) {
-          return prev + 1;
-        }
-        setDoneNodes((d) => (d.includes(activeNode) ? d : [...d, activeNode]));
-        if (activeNode < NODES.length - 1) {
-          setActiveNode((n) => n + 1);
-          return 0;
-        }
-        clearInterval(timer);
-        setTimeout(() => router.push("/report"), 1200);
-        return prev;
-      });
-    }, STEP_DURATION);
+    const stepsForCurrent = THINKING_PER_NODE[activeNode];
+    const isLastStep = thinkingIdx >= stepsForCurrent.length - 1;
 
-    return () => clearInterval(timer);
-  }, [activeNode, router]);
+    if (!isLastStep) {
+      const t = setTimeout(
+        () => setThinkingIdx(thinkingIdx + 1),
+        STEP_DURATION,
+      );
+      return () => clearTimeout(t);
+    }
+
+    const t = setTimeout(() => {
+      setDoneNodes((d) =>
+        d.includes(activeNode) ? d : [...d, activeNode],
+      );
+      if (activeNode < NODES.length - 1) {
+        setActiveNode(activeNode + 1);
+        setThinkingIdx(0);
+      } else {
+        setTimeout(() => router.push("/report"), 1200);
+      }
+    }, STEP_DURATION);
+    return () => clearTimeout(t);
+  }, [activeNode, thinkingIdx, router]);
 
   const stateOf = (idx: number): StepState => {
     if (doneNodes.includes(idx)) return "done";
@@ -133,16 +138,15 @@ export default function AnalysePage() {
           <div>
             <div className="relative">
               <svg
-                className="absolute left-[27px] top-12 bottom-[60px] w-0.5 -z-0"
-                width="2"
-                height="100%"
+                className="absolute left-[27px] top-12 h-[calc(100%-108px)] w-0.5 -z-0"
+                viewBox="0 0 2 100"
                 preserveAspectRatio="none"
               >
                 <line
                   x1="1"
                   y1="0"
                   x2="1"
-                  y2="100%"
+                  y2="100"
                   stroke="#e5e5e2"
                   strokeWidth="2"
                 />
@@ -150,7 +154,7 @@ export default function AnalysePage() {
                   x1="1"
                   y1="0"
                   x2="1"
-                  y2="100%"
+                  y2="100"
                   stroke="#0a0a0a"
                   strokeWidth="2"
                   initial={{ pathLength: 0 }}
