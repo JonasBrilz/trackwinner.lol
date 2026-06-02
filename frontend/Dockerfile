@@ -1,19 +1,20 @@
-FROM node:22-alpine AS deps
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
+# Build the Leptos (Rust/WASM) frontend to a static bundle, then serve it with
+# nginx. Replaces the old Next.js/Node image — no Node runtime, ~static memory.
 
-FROM node:22-alpine AS builder
+FROM rust:1-bookworm AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+RUN rustup target add wasm32-unknown-unknown \
+ && curl -sSL https://github.com/trunk-rs/trunk/releases/download/v0.21.7/trunk-x86_64-unknown-linux-gnu.tar.gz \
+    | tar -xzf - -C /usr/local/bin
 COPY . .
-RUN npm run build
+# Trunk auto-fetches wasm-bindgen + the tailwindcss standalone CLI on first build.
+RUN trunk build --release
 
-FROM node:22-alpine AS runner
-WORKDIR /app
-ENV NODE_ENV=production
-ENV PORT=8080
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+FROM nginx:alpine AS runner
+# Cloud Run routes to port 8080; serve the SPA with a fallback to index.html
+# so client-side routes (/home, /analyse, /report) resolve on hard loads.
+RUN printf 'server {\n  listen 8080;\n  root /usr/share/nginx/html;\n  location / {\n    try_files $uri $uri/ /index.html;\n  }\n}\n' \
+    > /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 8080
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
