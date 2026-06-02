@@ -1,5 +1,6 @@
 # Build the Leptos (Rust/WASM) frontend to a static bundle, then serve it with
-# nginx. Replaces the old Next.js/Node image — no Node runtime, ~static memory.
+# static-web-server — a tiny single-binary static server (scratch-based image).
+# No Node, no nginx; idles at a few MB on Cloud Run.
 
 FROM rust:1-bookworm AS builder
 WORKDIR /app
@@ -10,11 +11,15 @@ COPY . .
 # Trunk auto-fetches wasm-bindgen + the tailwindcss standalone CLI on first build.
 RUN trunk build --release
 
-FROM nginx:alpine AS runner
-# Cloud Run routes to port 8080; serve the SPA with a fallback to index.html
-# so client-side routes (/home, /analyse, /report) resolve on hard loads.
-RUN printf 'server {\n  listen 8080;\n  root /usr/share/nginx/html;\n  location / {\n    try_files $uri $uri/ /index.html;\n  }\n}\n' \
-    > /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
+# static-web-server's official image is built FROM scratch (tiny). It reads its
+# config from SERVER_* env vars, so the entrypoint stays the image default.
+FROM ghcr.io/static-web-server/static-web-server:2 AS runner
+ENV SERVER_HOST=0.0.0.0 \
+    SERVER_PORT=8080 \
+    SERVER_ROOT=/public \
+    # SPA fallback: any unknown path returns index.html (200) so the client-side
+    # router resolves /home, /analyse, /report on hard loads — behaviour identical
+    # to the old nginx try_files setup.
+    SERVER_FALLBACK_PAGE=/public/index.html
+COPY --from=builder /app/dist /public
 EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
