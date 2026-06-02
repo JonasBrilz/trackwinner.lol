@@ -1,0 +1,21 @@
+[package]
+name = "trackwinner-frontend-rs"
+version = "0.1.0"
+edition = "2021"
+description = "Rust/WASM (Leptos CSR) port of the trackwinner.lol report page"
+
+[dependencies]
+leptos = { version = "0.6", features = ["csr"] }
+leptos_router = { version = "0.6", features = ["csr"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3", features = [
+    "Window", "Storage", "Performance", "console",
+] }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

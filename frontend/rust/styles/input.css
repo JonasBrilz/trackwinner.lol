@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: "Inter", system-ui, sans-serif;
+}
+
+html,
+body {
+  background: #f3f3f1;
+  color: #0a0a0a;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.dot-grid {
+  background-image: radial-gradient(circle, #d6d6d2 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Entrance helpers (replace framer-motion's initial/animate fades).
+   Apply `.enter` + an optional `--d` delay via inline style. */
+.enter {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animated bar fill */
+.bar-fill {
+  width: 0;
+  transition: width 0.9s ease-out;
+  transition-delay: 0.4s;
+}
+
+/* Smooth width transition for the analyse connector + progress bar */
+.grow-h {
+  transition: height 0.8s ease-in-out;
+}
+.grow-w {
+  transition: width 0.5s ease-out;
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  header,
+  nav,
+  .no-print,
+  .dot-grid {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+  section {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  .print-bg-light {
+    background: #ffffff !important;
+    color: #0a0a0a !important;
+    border: 1px solid #e5e5e2 !important;
+    border-radius: 14px !important;
+    padding: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  .print-bg-light * {
+    color: #0a0a0a !important;
+  }
+  .print-bg-light .rounded-xl {
+    background: #f8f8f6 !important;
+    border-color: #e5e5e2 !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+    line-height: 1.05 !important;
+  }
+  h2 {
+    font-size: 1.15rem !important;
+  }
+
+  .print-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    box-shadow: none !important;
+    padding: 0.9rem !important;
+    border: 1px solid #e5e5e2 !important;
+  }
+
+  .mb-10,
+  .mb-12,
+  .mb-14 {
+    margin-bottom: 0.75rem !important;
+  }
+  .mt-16,
+  .mt-24 {
+    margin-top: 0.75rem !important;
+  }
+
+  .enter {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+}
